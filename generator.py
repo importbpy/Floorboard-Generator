@@ -1,36 +1,3 @@
-# ##### BEGIN GPL LICENSE BLOCK #####
-#
-#  Floor Generator, a Blender addon
-#  (c) 2013,2015,2016 Michel J. Anders (varkenvarken)
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software Foundation,
-#  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ##### END GPL LICENSE BLOCK #####
-
-bl_info = {
-    "name": "Floor Generator",
-    "author": "Michel Anders (varkenvarken) with contributions from Alain, Floric ,Lell and Marek Moravec. The idea to add patterns is based on Cedric Brandin's (clarkx) parquet addon",
-    "version": (0, 0, 201812011530),
-    "blender": (2, 80, 0),
-    "location": "View3D > Add > Mesh",
-    "description": "Adds a mesh representing floor boards (planks)",
-    "warning": "",
-    "wiki_url": "",
-    "tracker_url": "",
-    "category": "Add Mesh"}
-
 from random import random as rand, seed, uniform as randuni, randrange
 from math import pi as PI, sqrt, radians
 from copy import deepcopy
@@ -1297,12 +1264,6 @@ class FloorBoardsAdd(bpy.types.Operator):
         bpy.ops.mesh.floor_boards_convert('INVOKE_DEFAULT')
         return {'FINISHED'}
 
-
-def menu_func(self, context):
-    self.layout.operator(FloorBoardsAdd.bl_idname, text="Add floor board mesh",
-                        icon='PLUGIN')
-
-
 class FloorBoardsConvert(bpy.types.Operator):
     bl_idname = 'mesh.floor_boards_convert'
     bl_label = 'Convert to Floorobject'
@@ -1314,26 +1275,16 @@ class FloorBoardsConvert(bpy.types.Operator):
         o.length = 4
         return {"FINISHED"}
 
-
-classes = (
-    FloorBoardsAdd,
-    FBGPanelMain,
-    FBGPanelMainOffset,
-    FBGPanelPlanksDim,
-    FBGPanelRandomness,
-    FBGPanelMiscellaneous,
-    FloorBoardsConvert
-)
-
+def menu_func(self, context):
+    self.layout.operator(
+        FloorBoardsAdd.bl_idname, 
+        text="Add floor board mesh",
+        icon='PLUGIN'
+    )
+    
 def register():
-    from bpy.utils import register_class
-    for cls in classes:
-        register_class(cls)
     bpy.types.VIEW3D_MT_mesh_add.append(menu_func)
 
 def unregister():
     bpy.types.VIEW3D_MT_mesh_add.remove(menu_func)
-    from bpy.utils import unregister_class
-    for cls in reversed(classes):
-        unregister_class(cls)
-    
+
