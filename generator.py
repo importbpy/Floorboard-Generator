@@ -521,8 +521,9 @@ def updateMesh(self, context):
     # add uv-coords and per face random vertex colors
     rot = Euler((0,0,o.uvrotation))
     mesh.uv_layers.new()
-    uv_layer = mesh.uv_layers.active.data
+    # WARNING: need to create vertex colors layer before accessing uv_layer
     vertex_colors = mesh.vertex_colors.new().data
+    uv_layer = mesh.uv_layers.active.data
     offset = Vector()
     # note that the uvs that are returned are shuffled
     for poly in mesh.polygons:
