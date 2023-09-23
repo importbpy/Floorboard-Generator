@@ -611,7 +611,10 @@ def updateMesh(self, context):
                 else:
                     v.co.z -= dshort
 
-        creases = bm.edges.layers.crease.new()
+        if bpy.app.version >= (4,0,0):
+            creases = bm.edges.layers.float.get('crease_edge', bm.edges.layers.float.new('crease_edge')) 
+        else:
+            creases = bm.edges.layers.crease.verify()
         for edge in bm.edges:
             edge[creases] = 1
             for vert in edge.verts:
@@ -658,7 +661,7 @@ def updateMesh(self, context):
     open_edges = [e for e in bm.edges if len(e.link_faces)==1]
     bmesh.ops.edgeloop_fill(bm, edges=open_edges, mat_nr=0, use_smooth=False)
 
-    creases = bm.edges.layers.crease.active
+    creases = bm.edges.layers.float.get('crease_edge', None) if bpy.app.version >= (4,0,0) else bm.edges.layers.crease.active
     if creases is not None:
         for edge in open_edges:
             edge[creases] = 1
